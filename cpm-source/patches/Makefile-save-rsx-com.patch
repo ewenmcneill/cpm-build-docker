@@ -1,0 +1,17 @@
+--- Makefile.old	2011-01-11 10:53:16.000000000 +1300
++++ Makefile	2023-11-10 11:52:13.101372381 +1300
+@@ -164,9 +164,13 @@
+ 	$(ZXCC) $(LINK) putrsx +-[OP]
+ 	mv -f putrsx.prl $@
+ 
++# Generate a RSX-only command file (NULL flag), where .rsx and .com have same
++# name; the .com file must *not* pre-exist, otherwise the .rsx will be detected
++# as already present, hence explicitly removing it.
++#
+ save.com:	save.rsx gencom.com
+ 	rm -f $@
+-	$(ZXCC) gencom save +-[NULL]
++	$(ZXCC) gencom.com save +-[NULL]
+ 
+ set.com:	set.hex dirlbl.rsx gencom.com hexcom
+ 	./hexcom $@ <$<

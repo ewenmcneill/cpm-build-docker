@@ -1,0 +1,72 @@
+#! /bin/sh
+# Extract and build CP/M Plus from source in /src/archives/cpm3src_unix.zip
+# with any relevant patches
+#
+# We need one patch because "zxcc gencom ..." seems to infinite loop,
+# but "zxcc gencom.com..." seems to run correctly (and the patch adds an
+# explanation) to the Makefile for that step
+#
+# Written by Ewen McNeill <ewen@naos.co.nz>, 2023-11-10
+#
+#---------------------------------------------------------------------------
+# SPDX-License-Identifier: MIT
+#
+# MIT copyright license for these "Continuous Integration" wrappers around the
+# CP/M Plus build tools (CP/M Plus and the other tools use have their
+# own copyrights; CP/M Plus has a non-commercial license).
+#
+# Copyright 2023 Ewen McNeill
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation files
+# (the “Software”), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge,
+# publish, distribute, sublicense, and/or sell copies of the Software,
+# and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+# NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+# THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#---------------------------------------------------------------------------
+
+set -e
+
+SOURCE_ARCHIVE=/src/archives/cpm3src_unix.zip
+PATCH_DIR=/src/archives/patches
+BUILD_DIR=/src/cpm3
+OUT_DIR="${1}"
+
+# Set up the build directory, including with links to the PLM80 / ASM80 tools
+# "runthames" expects these as PLM80/plm80, ASM80/asm80, and Utils/...
+#
+mkdir /src/cpm3
+cd /src/cpm3
+unzip "${SOURCE_ARCHIVE}"
+ln -s /emulators/plm80/plm80 PLM80
+ln -s /emulators/plm80/asm80 ASM80
+ln -s /emulators/plm80/utils Utils
+for PATCH in "${PATCH_DIR}/"*; do
+  patch -p0 <"${PATCH}"
+done
+
+# Run the build
+cd "${BUILD_DIR}"
+make clean
+make
+make cpm3bin_unix.zip
+make cpm3src_unix.zip
+
+# Optionally copy the built archives out of the container
+if [ -n "${OUT_DIR}" ]; then
+  for FILE in cpm3bin_unix.zip cpm3src_unix.zip; do
+    cp -p "${FILE}" "${OUT_DIR}/${FILE}"
+  done
+fi

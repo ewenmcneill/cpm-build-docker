@@ -1,0 +1,17 @@
+Downloaded from:
+
+http://www.cpm.z80.de/download/plm80.zip
+
+on 2023-11-09.
+
+
+Via links at:
+
+http://www.cpm.z80.de/binary.html
+http://www.seasip.info/Cpm/building.html
+
+to use with the "thames" ISIS emulator.
+
+Inside the zip files are two .EXE files, which are self extracting
+zip files; thames can then use the extracted directories as if they
+were emulated drives.

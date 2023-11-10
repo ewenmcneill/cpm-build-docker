@@ -1,0 +1,10 @@
+Downloaded from:
+
+http://www.seasip.info/Unix/Zxcc/zxcc-0.5.7.tar.gz
+
+on 2023-11-09.
+
+Via links on:
+
+http://www.seasip.info/Unix/Zxcc/
+http://www.seasip.info/Cpm/building.html
