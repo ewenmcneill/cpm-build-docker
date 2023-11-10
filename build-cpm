@@ -1,0 +1,76 @@
+#! /bin/sh
+# Run Docker to build CP/M from source
+#
+# This relies on cpm-source/build-cpm, which is mounted into the Docker
+# container to do some of the steps.
+#
+# And we need one patch because "zxcc gencom ..." seems to infinite loop,
+# but "zxcc gencom.com..." seems to run correctly (and the patch adds an
+# explanation) to the Makefile for that step
+#
+# Written by Ewen McNeill <ewen@naos.co.nz>, 2023-11-10
+#
+#---------------------------------------------------------------------------
+# SPDX-License-Identifier: MIT
+#
+# MIT copyright license for these "Continuous Integration" wrappers around the
+# CP/M Plus build tools (CP/M Plus and the other tools use have their
+# own copyrights; CP/M Plus has a non-commercial license).
+#
+# Copyright 2023 Ewen McNeill
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation files
+# (the “Software”), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge,
+# publish, distribute, sublicense, and/or sell copies of the Software,
+# and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+# NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+# THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#---------------------------------------------------------------------------
+
+set -e      # Give up on errors
+
+# Set path, including the current directory
+BIN_DIR=$(dirname $0)
+if [ -z "${BIN_DIR}" ]; then BIN_DIR="."; fi
+case "${BIN_DIR}" in
+  .)  BIN_DIR="$(pwd)";            ;;
+  /*)                              ;;
+  *)  BIN_DIR="$(pwd)/${BIN_DIR}"; ;;
+esac
+
+CPM_SOURCE="${BIN_DIR}/cpm-source"
+OUTPUT="${BIN_DIR}/output"
+
+# Build the Docker Image with cross-compile tools, if not already built
+if docker image ls cpm-ci | grep -q "cpm-ci"; then
+  :       # Docker image already exists
+else
+  docker build -t cpm-ci "${BIN_DIR}"
+fi
+
+# Run the actual build, with mounted volumes
+mkdir -p "${OUTPUT}"
+
+docker run -it --rm                                                       \
+       -v "${OUTPUT}:/output"                                             \
+       -v "${CPM_SOURCE}/cpm3src_unix.zip:/src/archives/cpm3src_unix.zip" \
+       -v "${CPM_SOURCE}/patches:/src/archives/patches"                   \
+       -v "${CPM_SOURCE}/build-cpm:/src/build-cpm"                        \
+       cpm-ci /src/build-cpm /output
+
+echo "----------------------------------------------------------------------"
+echo "Build output:"
+echo ""
+ls -l "${OUTPUT}"
