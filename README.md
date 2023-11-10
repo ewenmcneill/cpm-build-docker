@@ -94,3 +94,8 @@ CP/M](https://www.autometer.de/unix4fun/z80pack/doc_isis_intro.html),
 which does not run under CP/M Plus).  It is not quite as automated a
 build, but runs on an emulation of "period correct" hardware, rather
 than being a full Linux-cross-compile build through emulators like here.
+
+[Mark Ogden](https://mark-ogden.uk/) has [enhanced the Thames ISIS
+emulator](https://github.com/ogdenpm/thames-src) so that it can run
+more programs.  And used it in [reverse engineering and rebuilding
+many Intel 8080 / ISIS programs](https://github.com/ogdenpm/intel80tools).
