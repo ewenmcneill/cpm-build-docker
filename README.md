@@ -34,9 +34,10 @@ from CP/M-86 plus some comptability layers).
 
 ## Building CP/M Plus
 
-[John Elliot](http://www.seasip.info/index.html) did all the work to
-determine how to build CP/M Plus under Linux, including writing a couple
-of emulators to run the build tools under Linux:
+[John Elliot](http://www.seasip.info/index.html) did
+all the work to determine [how to build CP/M Plus under
+Linux](http://www.seasip.info/Cpm/building.html), including writing a
+couple of emulators to run the build tools under Linux:
 
 *   [ZXCC](http://www.seasip.info/Unix/Zxcc/) which runs CP/M binaries
     under Linux, with I/O redirection to files
