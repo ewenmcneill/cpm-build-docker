@@ -99,3 +99,6 @@ than being a full Linux-cross-compile build through emulators like here.
 emulator](https://github.com/ogdenpm/thames-src) so that it can run
 more programs.  And used it in [reverse engineering and rebuilding
 many Intel 8080 / ISIS programs](https://github.com/ogdenpm/intel80tools).
+He has also [ported several of the early Intel tools to
+C/C++](https://github.com/ogdenpm/c-ports), so they can be built to
+run natively on modern systems.
