@@ -53,6 +53,11 @@ esac
 CPM_SOURCE="${BIN_DIR}/cpm-source"
 OUTPUT="${BIN_DIR}/output"
 
+# If necessary download the third party tools (with their own licenese)
+# that we cannot include in the git repo
+#
+"${BIN_DIR}/download-tools"
+
 # Build the Docker Image with cross-compile tools, if not already built
 if docker image ls cpm-ci | grep -q "cpm-ci"; then
   :       # Docker image already exists

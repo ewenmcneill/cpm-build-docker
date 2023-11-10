@@ -1,0 +1,104 @@
+#! /bin/sh
+# Download emulators and compilers needed to build CP/M Plus from source
+#
+# References for downloads:
+#
+# http://www.cpm.z80.de/source.html
+# -- source code for CP/M Plus (CP/M 3) released by Digital Research / Linero
+# -- License: http://www.cpm.z80.de/license.html
+#
+# http://www.cpm.z80.de/binary.html
+# -- contains the PLM80 / ASM80 Intel ISIS-II compiler/assembler
+# -- License: Intel non-commercial license, from about 1991
+#
+# http://www.seasip.info/Unix/Zxcc/
+# -- CP/M "emulator" to run CP/M binaries under Linux with I/O redirection
+# -- Written by John Elliott
+# -- License: GPL
+#
+# http://www.seasip.info/Unix/Thames/
+# -- ISIS "emulator" to run ISIS-II binaries under Linux with I/O redirection
+# -- Written by John Elliott
+# -- License: GPL
+#
+# Written by Ewen McNeill <ewen@naos.co.nz>, 2023-11-10
+#
+#---------------------------------------------------------------------------
+# SPDX-License-Identifier: MIT
+#
+# MIT copyright license for these "Continuous Integration" wrappers around the
+# CP/M Plus build tools (CP/M Plus and the other tools use have their
+# own copyrights; CP/M Plus has a non-commercial license).
+#
+# Copyright 2023 Ewen McNeill
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation files
+# (the “Software”), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge,
+# publish, distribute, sublicense, and/or sell copies of the Software,
+# and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+# NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+# THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#---------------------------------------------------------------------------
+
+# Set path, including the current directory
+BIN_DIR=$(dirname $0)
+if [ -z "${BIN_DIR}" ]; then BIN_DIR="."; fi
+case "${BIN_DIR}" in
+  .)  BIN_DIR="$(pwd)";            ;;
+  /*)                              ;;
+  *)  BIN_DIR="$(pwd)/${BIN_DIR}"; ;;
+esac
+
+CPM3_SRC_URL="http://www.cpm.z80.de/download/cpm3src_unix.zip"
+CPM3_SRC_OUTPUT="${BIN_DIR}/cpm-source/cpm3src_unix.zip"
+
+PLM_URL="http://www.cpm.z80.de/download/plm80.zip"
+PLM_OUTPUT="${BIN_DIR}/plm-isis-compiler/plm80.zip"
+
+ZXCC_URL="http://www.seasip.info/Unix/Zxcc/zxcc-0.5.7.tar.gz"
+ZXCC_OUTPUT="${BIN_DIR}/emulators/zxcc-0.5.7.tar.gz"
+
+THAMES_URL="http://www.seasip.info/Unix/Thames/thames-0.1.1.tar.gz"
+THAMES_OUTPUT="${BIN_DIR}/emulators/thames-0.1.1.tar.gz"
+
+#---------------------------------------------------------------------------
+
+if [ -f "${CPM3_SRC_OUTPUT}" ]; then
+  :
+else
+  echo "Downloading CP/M Plus source from ${CPM3_SRC_URL}"	 
+  curl -so "${CPM3_SRC_OUTPUT}" "${CPM3_SRC_URL}"
+fi
+
+if [ -f "${PLM_OUTPUT}" ]; then
+  :
+else
+  echo "Downloading PLM80 / ASM80 compiler/assembler from ${PLM_URL}"	 
+  curl -so "${PLM_OUTPUT}" "${PLM_URL}"
+fi
+
+if [ -f "${ZXCC_OUTPUT}" ]; then
+  :
+else
+  echo "Downloading ZXCC CP/M emulator ${ZXCC_URL}"	 
+  curl -so "${ZXCC_OUTPUT}" "${ZXCC_URL}"
+fi
+
+if [ -f "${THAMES_OUTPUT}" ]; then
+  :
+else
+  echo "Downloading Thames ISIS-II emulator ${THAMES_URL}"	 
+  curl -so "${THAMES_OUTPUT}" "${THAMES_URL}"
+fi
