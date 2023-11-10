@@ -82,3 +82,14 @@ in the top level directory to build CP/M from the
 `output/` directory.  (It will automatically run the `./download-tools`
 step, and the `docker build -t cpm-ci .` step, if it detects those have
 not been done.)
+
+## See also
+
+The [z80pack](https://www.autometer.de/unix4fun/z80pack/) emulator
+includes a [guide to building CP/M Plus under CP/M Plus and CP/M
+2.2](https://www.autometer.de/unix4fun/z80pack/doc_cpm3_src.html)
+(needed for the [ISIS-II emulator for
+CP/M](https://www.autometer.de/unix4fun/z80pack/doc_isis_intro.html),
+which does not run under CP/M Plus).  It is not quite as automated a
+build, but runs on an emulation of "period correct" hardware, rather
+than being a full Linux-cross-compile build through emulators like here.
